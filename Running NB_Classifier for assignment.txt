@@ -1,0 +1,59 @@
+Value  ||  Discretised Value
+
+(height) 164 || 2
+
+(weight) 70 || 2
+(weight) 64 || 2
+
+(systolic_blood_pressure) 130 || 3
+(systolic_blood_pressure) 180 || 3
+
+(diastolic_blood_pressure)  90 || 2
+
+(glucose) 1 ||  1
+
+(smoke) 0 || 0
+(smoke) 1 || 1
+
+(alcohol) 0 ||  0
+_________________________________________________
+
+Value  ||  Discretised Value
+
+(Glucose) 109 || 2
+(Glucose) 183 || 4
+
+(BMI) 25.4 || 2
+(BMI) 23.3 || 1
+
+(Age) 25 || 2
+(Age) 58 || 5
+
+
+CPT Generator:
+python CPT_Generator.py ../config/config-diabetes.txt ../data/diabetes_data-discretized-train.csv 
+python CPT_Generator.py ../config/config-cardiovascular.txt ../data/cardiovascular_data-discretized-train.csv
+
+Diabetes Database:
+
+Query 1:
+python BayesNetInference.py InferenceByEnumeration ../config/config-cardiovascular.txt "P(target|height=2,weight=2,ap_hi=3,ap_lo=2,gluc=1,smoke=0,alco=0)"
+python BayesNetInference.py RejectionSampling ../config/config-cardiovascular.txt "P(target|height=2,weight=2,ap_hi=3,ap_lo=2,gluc=1,smoke=0,alco=0)" 1000000
+
+Query 2:
+python BayesNetInference.py InferenceByEnumeration ../config/config-cardiovascular.txt "P(target|height=2,weight=2,ap_hi=3,ap_lo=2,gluc=1,smoke=1,alco=0)"
+python BayesNetInference.py RejectionSampling ../config/config-cardiovascular.txt "P(target|height=2,weight=2,ap_hi=3,ap_lo=2,gluc=1,smoke=1,alco=0)" 1000000
+
+Query 3:
+(USED FOR EXECUTION TIME IN PERFORMANCE TABLE) python BayesNetInference.py InferenceByEnumeration ../config/config-diabetes.txt "P(Outcome|Glucose=2,BMI=2,Age=2)"
+python BayesNetInference.py RejectionSampling ../config/config-diabetes.txt "P(Outcome|Glucose=2,BMI=2,Age=2)" 1000000
+
+Query 4:
+python BayesNetInference.py InferenceByEnumeration ../config/config-diabetes.txt "P(Outcome|Glucose=4,BMI=1,Age=5)"
+python BayesNetInference.py RejectionSampling ../config/config-diabetes.txt "P(Outcome|Glucose=4,BMI=1,Age=5)" 1000000
+
+
+
+
+python ModelEvaluator.py ../config/config-diabetes.txt ../data/diabetes_data-discretized-train.csv ../data/diabetes_data-discretized-test.csv
+python ModelEvaluator.py ../config/config-cardiovascular.txt ../data/cardiovascular_data-discretized-train.csv ../data/cardiovascular_data-discretized-test.csv

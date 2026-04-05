@@ -1,0 +1,8 @@
+name:Cardiovascular
+
+random_variables:target(target);age(age);height(height);weight(weight);ap_hi(ap_hi);ap_lo(ap_lo);cholesterol(cholesterol);gluc(gluc);smoke(smoke);alco(alco);active(active)
+
+structure:P(target);P(age|target);P(gender|target);P(height|target);P(weight|target);P(ap_hi|target);P(ap_lo|target);P(cholesterol|target);P(gluc|target);P(smoke|target);P(alco|target);P(active|target)
+
+
+
